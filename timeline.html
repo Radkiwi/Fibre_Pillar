@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Zealand Fibre — 250 Years of Innovation | Craffft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5EDD8;
+      --gold: #C8A84B;
+      --bg: #0C1A10;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    /* ═══════════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════════ */
+    .tl-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 18px 40px 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(12,26,16,0.98) 60%, transparent);
+      gap: 24px;
+    }
+
+    .tl-brand {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Nav dots */
+    .tl-nav {
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .tl-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 0 4px;
+      gap: 5px;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .tl-nav-item:hover { opacity: 0.8; }
+    .tl-nav-item.active { opacity: 1; }
+
+    .tl-nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(200,168,75,0.3);
+      border: 1px solid rgba(200,168,75,0.5);
+      transition: all 0.3s;
+    }
+
+    .tl-nav-item.active .tl-nav-dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(200,168,75,0.7);
+      transform: scale(1.4);
+    }
+
+    .tl-nav-label {
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(245,237,216,0.5);
+      text-align: center;
+      white-space: nowrap;
+      transition: color 0.3s;
+    }
+
+    .tl-nav-item.active .tl-nav-label { color: var(--gold); }
+
+    .tl-nav-connector {
+      width: 32px; height: 1px;
+      background: rgba(200,168,75,0.15);
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Progress bar */
+    .tl-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      z-index: 300;
+      background: rgba(200,168,75,0.1);
+    }
+
+    .tl-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--gold), #8AE89A);
+      width: 0%;
+      transition: width 0.15s ease;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL TRACK
+    ═══════════════════════════════════════════ */
+    .tl-scroll {
+      display: flex;
+      height: 100vh;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .tl-scroll::-webkit-scrollbar { display: none; }
+
+    /* ═══════════════════════════════════════════
+       ERA PANELS
+    ═══════════════════════════════════════════ */
+    .era {
+      min-width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Backgrounds */
+    .era-bg {
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.8s;
+    }
+
+    /* Noise texture overlay */
+    .era-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .era-1 .era-bg  { background: radial-gradient(ellipse at 25% 65%, #2D4F2D 0%, #182A18 45%, #0A1A0C 100%); }
+    .era-2 .era-bg  { background: radial-gradient(ellipse at 70% 40%, #1A3A4A 0%, #122535 45%, #0A1620 100%); }
+    .era-3 .era-bg  { background: radial-gradient(ellipse at 35% 55%, #3E2A0A 0%, #281A06 45%, #160E02 100%); }
+    .era-4 .era-bg  { background: radial-gradient(ellipse at 50% 50%, #232336 0%, #181828 45%, #0E0E1A 100%); }
+    .era-5 .era-bg  { background: radial-gradient(ellipse at 30% 60%, #1F3520 0%, #152618 45%, #0C1A10 100%); }
+    .era-6 .era-bg  { background: radial-gradient(ellipse at 60% 38%, #0B3A22 0%, #081F14 45%, #040F09 100%); }
+    .era-7 .era-bg  { background: radial-gradient(ellipse at 50% 45%, #0A2A4A 0%, #061B30 45%, #030D18 100%); }
+    .era-8 .era-bg  { background: radial-gradient(ellipse at 40% 30%, #152A20 0%, #0C1C28 50%, #050D12 100%); }
+
+    /* Large decorative number */
+    .era-num {
+      position: absolute;
+      right: 4%;
+      bottom: 10%;
+      font-family: 'Playfair Display', serif;
+      font-size: min(22vw, 240px);
+      font-weight: 700;
+      color: var(--accent, var(--gold));
+      opacity: 0.04;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Decorative botanical SVG (era 1 & 5) */
+    .era-flora {
+      position: absolute;
+      right: -2%;
+      top: 5%;
+      height: 90%;
+      width: 45%;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       CONTENT
+    ═══════════════════════════════════════════ */
+    .era-content {
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      width: 90%;
+      margin: 0 auto;
+      padding: 90px 0 70px;
+    }
+
+    /* Animated entrance — all children start hidden */
+    .tl-anim {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .era.in-view .tl-anim { opacity: 1; transform: translateY(0); }
+
+    .tl-anim-d1 { transition-delay: 0.1s; }
+    .tl-anim-d2 { transition-delay: 0.22s; }
+    .tl-anim-d3 { transition-delay: 0.34s; }
+    .tl-anim-d4 { transition-delay: 0.44s; }
+    .tl-anim-d5 { transition-delay: 0.54s; }
+    .tl-anim-d6 { transition-delay: 0.64s; }
+    .tl-anim-d7 { transition-delay: 0.74s; }
+    .tl-anim-d8 { transition-delay: 0.84s; }
+
+    .era-period {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent, var(--gold));
+      margin-bottom: 10px;
+    }
+
+    .era-maori {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 5.5vw, 74px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--accent, var(--gold));
+      margin-bottom: 4px;
+    }
+
+    .era-english {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(14px, 1.8vw, 20px);
+      font-style: italic;
+      color: rgba(245,237,216,0.55);
+      margin-bottom: 28px;
+    }
+
+    .era-rule {
+      width: 48px;
+      height: 1.5px;
+      background: var(--accent, var(--gold));
+      margin-bottom: 28px;
+      transform-origin: left;
+      /* override general tl-anim for this one */
+      opacity: 0;
+      transform: scaleX(0);
+      transition: opacity 0.5s ease, transform 0.6s ease;
+    }
+
+    .era.in-view .era-rule { opacity: 1; transform: scaleX(1); }
+
+    /* Events grid */
+    .era-events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px 20px;
+      margin-bottom: 28px;
+    }
+
+    .ev {
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+    }
+
+    .ev-icon { font-size: 18px; margin-bottom: 7px; }
+
+    .ev-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.35;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+
+    .ev-desc {
+      font-size: 11.5px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(245,237,216,0.6);
+    }
+
+    /* Material tags */
+    .era-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      padding: 3px 11px;
+      border-radius: 100px;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent, var(--gold));
+      color: var(--accent, var(--gold));
+      background: rgba(var(--accent-rgb, 200,168,75), 0.07);
+    }
+
+    /* ═══════════════════════════════════════════
+       ERA ACCENT COLOURS
+    ═══════════════════════════════════════════ */
+    .era-1 { --accent: #C8A84B; }
+    .era-2 { --accent: #7EC8C8; }
+    .era-3 { --accent: #D4892A; }
+    .era-4 { --accent: #8B9BAA; }
+    .era-5 { --accent: #6BAF6B; }
+    .era-6 { --accent: #2ECC71; }
+    .era-7 { --accent: #00E5FF; }
+    .era-8 { --accent: #A0FFB8; }
+
+    /* ═══════════════════════════════════════════
+       FUTURE PATHS (Era 8)
+    ═══════════════════════════════════════════ */
+    .future-intro {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(245,237,216,0.65);
+      max-width: 500px;
+      margin-bottom: 22px;
+    }
+
+    .future-paths {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .path {
+      border-radius: 7px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.09);
+      transition: border-color 0.25s, background 0.25s;
+      cursor: default;
+    }
+
+    .path:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .path-a { border-color: rgba(46,204,113,0.3); }
+    .path-b { border-color: rgba(0,229,255,0.3); }
+    .path-c { border-color: rgba(200,168,75,0.3); }
+    .path-d { border-color: rgba(100,100,110,0.25); }
+
+    .path-a:hover { border-color: rgba(46,204,113,0.6); }
+    .path-b:hover { border-color: rgba(0,229,255,0.6); }
+    .path-c:hover { border-color: rgba(200,168,75,0.6); }
+    .path-d:hover { border-color: rgba(100,100,110,0.5); }
+
+    .path-condition {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .path-a .path-condition { color: #2ECC71; }
+    .path-b .path-condition { color: #00E5FF; }
+    .path-c .path-condition { color: #C8A84B; }
+    .path-d .path-condition { color: #8B9BAA; }
+
+    .path-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .path-desc {
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(245,237,216,0.55);
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .tl-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 14px 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to top, rgba(12,26,16,0.96) 55%, transparent);
+    }
+
+    .tl-hint {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(245,237,216,0.3);
+    }
+
+    .tl-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tl-counter {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: rgba(245,237,216,0.4);
+      min-width: 42px;
+      text-align: center;
+    }
+
+    .tl-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.3);
+      background: rgba(200,168,75,0.04);
+      color: rgba(200,168,75,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .tl-btn:hover {
+      border-color: rgba(200,168,75,0.7);
+      background: rgba(200,168,75,0.1);
+      color: #C8A84B;
+    }
+
+    .tl-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .tl-nav-connector { width: 18px; }
+      .tl-header { padding: 14px 20px 10px; }
+      .tl-footer { padding: 10px 20px 16px; }
+      .era-content { padding: 82px 0 60px; }
+    }
+
+    @media (max-width: 640px) {
+      .tl-brand { display: none; }
+      .tl-nav-label { display: none; }
+      .tl-nav-connector { width: 10px; }
+      .era-events { grid-template-columns: 1fr 1fr; }
+      .future-paths { grid-template-columns: 1fr; }
+      .tl-hint { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .era-events { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="tl-progress"><div class="tl-progress-fill" id="progressFill"></div></div>
+
+<!-- Header -->
+<header class="tl-header">
+  <div class="tl-brand">Craffft · Fibre</div>
+
+  <nav class="tl-nav" id="tlNav" aria-label="Timeline navigation">
+    <!-- inserted by JS -->
+  </nav>
+</header>
+
+<!-- Scroll track -->
+<div class="tl-scroll" id="tlScroll">
+
+  <!-- ━━━━ ERA 1: TE AO TAWHITO ━━━━ -->
+  <section class="era era-1" data-era="0">
+    <div class="era-bg"></div>
+    <div class="era-num">1</div>
+
+    <!-- Harakeke SVG silhouette -->
+    <svg class="era-flora" viewBox="0 0 300 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M150 580 C150 580 80 400 50 250 C30 150 60 80 150 60" stroke="white" stroke-width="3" fill="none"/>
+      <path d="M150 580 C150 580 220 400 250 250 C270 150 240 80 150 60" stroke="white" stroke-width="3" fill="none"/>
+      <path d="M150 480 C100 380 40 320 10 200" stroke="white" stroke-width="2" fill="none"/>
+      <path d="M150 480 C200 380 260 320 290 200" stroke="white" stroke-width="2" fill="none"/>
+      <path d="M150 400 C120 300 90 260 70 160" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M150 400 C180 300 210 260 230 160" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M150 340 C130 260 120 200 130 120" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M150 340 C170 260 180 200 170 120" stroke="white" stroke-width="1.5" fill="none"/>
+      <ellipse cx="150" cy="55" rx="12" ry="16" fill="white"/>
+    </svg>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">c. 1350 – 1769</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Te Ao Tawhito</h2>
+      <p class="era-english tl-anim tl-anim-d3">The Ancient World</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🌿</div>
+          <div class="ev-title">Arrival & Adaptation</div>
+          <div class="ev-desc">Polynesian ancestors reach Aotearoa and adapt their Pacific fibre practices. Aute (paper mulberry) fails in the temperate climate — Harakeke becomes the foundational fibre.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🧬</div>
+          <div class="ev-title">Selective Cultivation</div>
+          <div class="ev-desc">Master weavers deliberately cultivate sub-species — pari-taniwha, oue, mangaeka, rātāroa — each optimised for tensile strength, gloss, or texture.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🌙</div>
+          <div class="ev-title">Tikanga & Maramataka</div>
+          <div class="ev-desc">Sustainable harvesting governed by customary protocols (tikanga) and the lunar calendar (maramataka), ensuring the long-term health of pā harakeke stands.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🌲</div>
+          <div class="ev-title">Kauri Forests</div>
+          <div class="ev-desc">Over 1.2 million hectares of Kauri forests cover Northland. Tānekaha, pīngao, and kiekie round out a rich indigenous fibre ecosystem.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Harakeke (Muka)</span>
+        <span class="tag">Kiekie</span>
+        <span class="tag">Pīngao</span>
+        <span class="tag">Tānekaha</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 2: TŪTAKITANGA ━━━━ -->
+  <section class="era era-2" data-era="1">
+    <div class="era-bg"></div>
+    <div class="era-num">2</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">1769 – 1840</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Tūtakitanga</h2>
+      <p class="era-english tl-anim tl-anim-d3">First Contact</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">⚓</div>
+          <div class="ev-title">European Recognition</div>
+          <div class="ev-desc">Captain Cook arrives 1769. European explorers immediately recognise Harakeke's superior tensile properties — ideal for maritime rigging, rope, and sail canvas.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">📦</div>
+          <div class="ev-title">The Flax Boom</div>
+          <div class="ev-desc">Flax export to Australia peaks in the 1830s, becoming New Zealand's first major commercial industry and fundamentally shaping the early colonial economy.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🪵</div>
+          <div class="ev-title">Kauri Trade Begins</div>
+          <div class="ev-desc">Early settlers fell Kauri for ship spars and building timber. The scale of extraction is initially limited — but the pattern of rapid resource depletion has begun.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🤝</div>
+          <div class="ev-title">Knowledge Exchange</div>
+          <div class="ev-desc">Māori trade expertly dressed muka fibre for European goods. For a brief era, indigenous expertise is the most valuable commodity in the Pacific.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Harakeke (Export)</span>
+        <span class="tag">Kauri Timber</span>
+        <span class="tag">Muka Rope</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 3: TE HĪTORI ŪPOKO ━━━━ -->
+  <section class="era era-3" data-era="2">
+    <div class="era-bg"></div>
+    <div class="era-num">3</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">1840 – 1920</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Te Hītori Ūpoko</h2>
+      <p class="era-english tl-anim tl-anim-d3">Peak Industry</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🏭</div>
+          <div class="ev-title">Industrial Flax Mills</div>
+          <div class="ev-desc">Processing facilities proliferate across the country. Harakeke becomes an agricultural cornerstone — but industrial-scale processing begins to erode the tikanga of sustainable harvest.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🪓</div>
+          <div class="ev-title">Kauri Forests Cleared</div>
+          <div class="ev-desc">Peak logging era. Over 90% of New Zealand's ancient Kauri forests are felled for timber. An ecological inheritance accumulated over thousands of years is consumed within decades.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🐑</div>
+          <div class="ev-title">The Wool Economy</div>
+          <div class="ev-desc">Strong wool becomes a pastoral cornerstone. NZ establishes itself as a global wool exporter — a position that masks the structural fragility of a single-commodity dependency.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">💎</div>
+          <div class="ev-title">Kauri Gum Industry</div>
+          <div class="ev-desc">Fossilised Kauri resin harvested for varnish, linoleum, and paint — the second wave of extraction from a forest system already critically depleted.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Harakeke (Industrial)</span>
+        <span class="tag">Kauri Timber</span>
+        <span class="tag">Kauri Gum</span>
+        <span class="tag">Wool</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 4: HINGA ━━━━ -->
+  <section class="era era-4" data-era="3">
+    <div class="era-bg"></div>
+    <div class="era-num">4</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">1920 – 1980</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Hinga</h2>
+      <p class="era-english tl-anim tl-anim-d3">The Fall</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🍂</div>
+          <div class="ev-title">Yellow-Leaf Disease</div>
+          <div class="ev-desc">c.1920: A disease outbreak devastates domestic Harakeke crops, compounding the industry's economic vulnerability at the worst possible moment.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🧪</div>
+          <div class="ev-title">Synthetics Arrive</div>
+          <div class="ev-desc">Nylon (1938) and polyester (1941) flood global markets at a fraction of natural fibre cost. The century-old economics of natural fibre are destroyed almost overnight.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">⚙️</div>
+          <div class="ev-title">Steam Kills Sail</div>
+          <div class="ev-desc">The transition to coal and diesel navigation permanently eliminates maritime demand for natural-fibre rope — the industry's largest export market — and never returns.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">📉</div>
+          <div class="ev-title">Wool Becomes a Liability</div>
+          <div class="ev-desc">Strong wool's market value collapses. Farmers carry the cost of shearing without the income to match. A proud agricultural cornerstone becomes a financial burden.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Nylon</span>
+        <span class="tag">Polyester</span>
+        <span class="tag">Acrylic</span>
+        <span class="tag">Wool (Declining)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 5: ARA HOU ━━━━ -->
+  <section class="era era-5" data-era="4">
+    <div class="era-bg"></div>
+    <div class="era-num">5</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">1980 – 2010</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Ara Hou</h2>
+      <p class="era-english tl-anim tl-anim-d3">New Pathway</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🌱</div>
+          <div class="ev-title">Environmental Awakening</div>
+          <div class="ev-desc">Growing global awareness of plastic pollution and synthetic material harms begins to rehabilitate the case for natural fibres — not as commodity, but as solution.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🌾</div>
+          <div class="ev-title">Hemp Legalised</div>
+          <div class="ev-desc">Industrial hemp cultivation legalised in New Zealand. A fast-growing, carbon-sequestering crop with exceptional fibre properties becomes available for the first time in generations.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🍄</div>
+          <div class="ev-title">Kauri Dieback Crisis</div>
+          <div class="ev-desc">2008: Phytophthora agathidicida — Kauri dieback disease — threatens the remaining 1–2% of ancient Kauri. The last of the forests faces a new and invisible enemy.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🔬</div>
+          <div class="ev-title">Research Programmes Begin</div>
+          <div class="ev-desc">Lincoln Agritech, Plant &amp; Food Research, and other institutions begin systematic bio-economy fibre research. The seeds of the coming renaissance are planted quietly.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Industrial Hemp</span>
+        <span class="tag">Recycled Wool</span>
+        <span class="tag">Early Bio-composites</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 6: HIHIRI ━━━━ -->
+  <section class="era era-6" data-era="5">
+    <div class="era-bg"></div>
+    <div class="era-num">6</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">2010 – 2024</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Hihiri</h2>
+      <p class="era-english tl-anim tl-anim-d3">The Renaissance</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">⚗️</div>
+          <div class="ev-title">Molecular Engineering</div>
+          <div class="ev-desc">Lincoln Agritech's fibre scientists develop polymer-to-fibre wet-spinning chemistry — dissolving keratin and cellulose to extrude entirely new, programmable biomaterials.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🚀</div>
+          <div class="ev-title">Wool Into Space</div>
+          <div class="ev-desc">Lanaco's Helix filter — engineered from Astino sheep genetics — is evaluated by NASA for the Orion deep-space capsule. Low-value wool becomes aerospace-grade filtration media.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🛣️</div>
+          <div class="ev-title">Hemp × Wool Geotextiles</div>
+          <div class="ev-desc">Chemical-free hemp decortication enables heavy-duty, fully biodegradable geotextiles. Synthetic plastic erosion-control products are replaced on NZ highways and waterways.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🐚</div>
+          <div class="ev-title">Mātauranga Māori Returns</div>
+          <div class="ev-desc">Indigenous researchers trial Harakeke and tī kouka as biodegradable mussel spat rope, guided by the maramataka. Traditional knowledge solves a modern marine pollution crisis.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Advanced Wool</span>
+        <span class="tag">Industrial Hemp</span>
+        <span class="tag">Harakeke (Marine)</span>
+        <span class="tag">Seaweed (Emerging)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 7: AO HOU ━━━━ -->
+  <section class="era era-7" data-era="6">
+    <div class="era-bg"></div>
+    <div class="era-num">7</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">2025 – 2026</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Ao Hou</h2>
+      <p class="era-english tl-anim tl-anim-d3">The New World</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🌊</div>
+          <div class="ev-title">World's First Seaweed Biorefinery</div>
+          <div class="ev-desc">October 2025, Paeroa: The world's first commercial seaweed nanocellulose biorefinery opens. Seaweed cellulose is stronger than steel, and absorbs over 100× its mass in water.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🕸️</div>
+          <div class="ev-title">Protein Biocomposites</div>
+          <div class="ev-desc">MBIE-funded research into bioinspired protein composites — drawing on the structural principles of cat claws and spider silk — creates programmable gradients of hardness and elasticity.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">💊</div>
+          <div class="ev-title">Aerospace-Grade Filtration</div>
+          <div class="ev-desc">Lanaco's Helix technology enters commercial production for global medical-grade anti-pollution masks. NZ strong wool captures viral particles and molten plastic toxins from urban air.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">⚡</div>
+          <div class="ev-title">E-Textiles</div>
+          <div class="ev-desc">Biometric electronic textiles emerge from NZ research — biosensors integrated into natural-fibre substrates. The boundary between agriculture and advanced electronics dissolves.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Seaweed Nanocellulose</span>
+        <span class="tag">Keratin Biocomposites</span>
+        <span class="tag">Advanced Wool</span>
+        <span class="tag">E-Textiles</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 8: NGĀ ARA ━━━━ -->
+  <section class="era era-8" data-era="7">
+    <div class="era-bg"></div>
+    <div class="era-num">8</div>
+
+    <div class="era-content">
+      <p class="era-period tl-anim tl-anim-d1">2026 → Future</p>
+      <h2 class="era-maori tl-anim tl-anim-d2">Ngā Ara</h2>
+      <p class="era-english tl-anim tl-anim-d3">The Pathways</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <p class="future-intro tl-anim tl-anim-d4">
+        The decisions made today will determine which path New Zealand's fibre industry takes.
+        This is not a fixed future — it is a choice.
+      </p>
+
+      <div class="future-paths">
+        <div class="path path-a tl-anim tl-anim-d5">
+          <div class="path-condition">If We Invest</div>
+          <div class="path-name">Global Bio-Economy Leadership</div>
+          <div class="path-desc">Sustained investment builds a $2B+ advanced fibre industry. NZ exports aerospace-grade biomaterials, biodegradable civil composites, and seaweed nanomaterials to global markets.</div>
+        </div>
+        <div class="path path-b tl-anim tl-anim-d6">
+          <div class="path-condition">If We Develop Workforce</div>
+          <div class="path-name">The STEM Pipeline Opens</div>
+          <div class="path-desc">Targeted biomanufacturing education bridges the chronic STEM deficit. Regional processing hubs activate. The knowledge locked in research institutions reaches commercial scale.</div>
+        </div>
+        <div class="path path-c tl-anim tl-anim-d7">
+          <div class="path-condition">If We Integrate</div>
+          <div class="path-name">Mātauranga Māori as Competitive Advantage</div>
+          <div class="path-desc">Tikanga-led R&D creates innovations no other nation can replicate. Sustainable harvesting protocols scale commercially. Indigenous IP is protected, valued, and globally recognised.</div>
+        </div>
+        <div class="path path-d tl-anim tl-anim-d8">
+          <div class="path-condition">Risk: If We Wait</div>
+          <div class="path-name">The Window Closes</div>
+          <div class="path-desc">Without action, synthetic plastics continue to dominate. The talent pipeline gap widens. The brief window where NZ's unique agricultural legacy confers a global competitive advantage quietly closes.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .tl-scroll -->
+
+<!-- Footer -->
+<footer class="tl-footer">
+  <span class="tl-hint">← → Arrow keys · Scroll · Swipe</span>
+  <div class="tl-controls">
+    <button class="tl-btn" id="btnPrev" aria-label="Previous era">←</button>
+    <span class="tl-counter" id="eraCounter">1 / 8</span>
+    <button class="tl-btn" id="btnNext" aria-label="Next era">→</button>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const ERAS = [
+      { year: 'c.1350', label: 'Ancient' },
+      { year: '1769',   label: 'Contact' },
+      { year: '1840',   label: 'Peak' },
+      { year: '1920',   label: 'Fall' },
+      { year: '1980',   label: 'Renewal' },
+      { year: '2010',   label: 'Renaissance' },
+      { year: '2025',   label: 'New World' },
+      { year: '2026+',  label: 'Pathways' },
+    ];
+
+    const scroll   = document.getElementById('tlScroll');
+    const nav      = document.getElementById('tlNav');
+    const fill     = document.getElementById('progressFill');
+    const counter  = document.getElementById('eraCounter');
+    const btnPrev  = document.getElementById('btnPrev');
+    const btnNext  = document.getElementById('btnNext');
+    const panels   = Array.from(document.querySelectorAll('.era'));
+    const N        = panels.length;
+    let current    = 0;
+
+    // ── Build nav ──────────────────────────────────────────
+    ERAS.forEach((e, i) => {
+      if (i > 0) {
+        const conn = document.createElement('div');
+        conn.className = 'tl-nav-connector';
+        nav.appendChild(conn);
+      }
+      const item = document.createElement('div');
+      item.className = 'tl-nav-item' + (i === 0 ? ' active' : '');
+      item.setAttribute('aria-label', `Era ${i+1}: ${e.label}`);
+      item.innerHTML = `<div class="tl-nav-dot"></div><div class="tl-nav-label">${e.year}</div>`;
+      item.addEventListener('click', () => scrollToEra(i));
+      nav.appendChild(item);
+    });
+
+    const navItems = Array.from(nav.querySelectorAll('.tl-nav-item'));
+
+    // ── Intersection Observer — animate content in ─────────
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          // Remove so re-entering triggers re-animation
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, { threshold: 0.45 });
+
+    panels.forEach(p => io.observe(p));
+
+    // ── Scroll tracking ────────────────────────────────────
+    function onScroll() {
+      const scrollLeft = scroll.scrollLeft;
+      const maxScroll  = scroll.scrollWidth - scroll.clientWidth;
+      const progress   = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+      fill.style.width = progress + '%';
+
+      // Which era is most visible?
+      const idx = Math.round(scrollLeft / scroll.clientWidth);
+      const clamped = Math.max(0, Math.min(N - 1, idx));
+      if (clamped !== current) {
+        current = clamped;
+        updateUI();
+      }
+    }
+
+    scroll.addEventListener('scroll', onScroll, { passive: true });
+
+    function updateUI() {
+      navItems.forEach((item, i) => item.classList.toggle('active', i === current));
+      counter.textContent = `${current + 1} / ${N}`;
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === N - 1;
+    }
+
+    // ── Scroll to era ──────────────────────────────────────
+    function scrollToEra(idx) {
+      const target = Math.max(0, Math.min(N - 1, idx));
+      scroll.scrollTo({ left: target * scroll.clientWidth, behavior: 'smooth' });
+    }
+
+    // ── Button controls ────────────────────────────────────
+    btnPrev.addEventListener('click', () => scrollToEra(current - 1));
+    btnNext.addEventListener('click', () => scrollToEra(current + 1));
+
+    // ── Keyboard navigation ────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown')  { e.preventDefault(); scrollToEra(current + 1); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    { e.preventDefault(); scrollToEra(current - 1); }
+      if (e.key === 'Home')  { e.preventDefault(); scrollToEra(0); }
+      if (e.key === 'End')   { e.preventDefault(); scrollToEra(N - 1); }
+    });
+
+    // ── Initial state ──────────────────────────────────────
+    updateUI();
+  })();
+</script>
+</body>
+</html>
