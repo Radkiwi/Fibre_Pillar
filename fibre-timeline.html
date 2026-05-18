@@ -27,7 +27,7 @@
     ═══════════════════════════════════════════ */
     .tl-header {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 36px; left: 0; right: 0;
       z-index: 200;
       padding: 18px 40px 14px;
       display: flex;
@@ -63,7 +63,7 @@
     ═══════════════════════════════════════════ */
     .tl-slider {
       position: fixed;
-      top: 48px;
+      top: 84px;
       left: 0; right: 0;
       z-index: 150;
       padding: 0 40px 0;
@@ -286,7 +286,7 @@
       max-width: 860px;
       width: 90%;
       margin: 0 auto;
-      padding: 140px 0 70px;
+      padding: 176px 0 70px;
     }
 
     /* Animated entrance — all children start hidden */
@@ -557,9 +557,9 @@
     ═══════════════════════════════════════════ */
     @media (max-width: 900px) {
       .tl-header { padding: 12px 20px 10px; }
-      .tl-slider { top: 44px; padding: 0 20px; }
+      .tl-slider { top: 80px; padding: 0 20px; }
       .tl-footer { padding: 10px 20px 16px; }
-      .era-content { padding: 130px 0 60px; }
+      .era-content { padding: 166px 0 60px; }
     }
 
     @media (max-width: 640px) {
@@ -574,9 +574,64 @@
       .era-events { grid-template-columns: 1fr; }
       .tl-seg-year { font-size: 7px; }
     }
+
+    /* ═══════════════════════════════════════════
+       SITE TOPBAR
+    ═══════════════════════════════════════════ */
+    .site-topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 36px;
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      background: rgba(5,7,12,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(200,168,75,0.12);
+    }
+    .topbar-home {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #C8A84B;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .topbar-home:hover { opacity: 1; }
+    .topbar-nav { display: flex; gap: 22px; }
+    .topbar-nav a {
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245,237,216,0.38);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .topbar-nav a:hover { color: #C8A84B; }
+    .topbar-nav a.topbar-active { color: rgba(245,237,216,0.82); }
+    @media (max-width: 640px) {
+      .site-topbar { padding: 0 16px; }
+      .topbar-nav { gap: 12px; }
+      .topbar-nav a { font-size: 8px; letter-spacing: 0.06em; }
+    }
   </style>
 </head>
 <body>
+
+<div class="site-topbar">
+  <a class="topbar-home" href="education.html">← Craffft</a>
+  <nav class="topbar-nav">
+    <a href="fibre-timeline.html" class="topbar-active">Fibre</a>
+    <a href="food-timeline.html">Food</a>
+    <a href="Factory-timeline.html">Factory</a>
+    <a href="transport-timeline.html">Transport</a>
+  </nav>
+</div>
 
 <!-- Progress bar -->
 <div class="tl-progress"><div class="tl-progress-fill" id="progressFill"></div></div>

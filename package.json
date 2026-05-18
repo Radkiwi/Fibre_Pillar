@@ -1,0 +1,11 @@
+{
+  "name": "craffft-pillars",
+  "version": "1.0.0",
+  "description": "Craffft interactive pillar timelines — Food, Fibre, Factory, Transport",
+  "scripts": {
+    "start": "serve . --listen $PORT --single"
+  },
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}
