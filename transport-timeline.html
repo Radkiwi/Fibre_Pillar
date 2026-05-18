@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Zealand Transport — 670 Years of Movement | Craffft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5EDD8;
+      --gold: #C8A84B;
+      --bg: #0A0F18;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    /* ═══════════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════════ */
+    .tl-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 18px 40px 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(10,15,24,0.98) 60%, transparent);
+      gap: 24px;
+    }
+
+    .tl-brand {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tl-era-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: rgba(245,237,216,0.55);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════════
+       PROGRESS BAR
+    ═══════════════════════════════════════════ */
+    .tl-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      z-index: 300;
+      background: rgba(200,168,75,0.1);
+    }
+
+    .tl-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--gold), #00E5FF);
+      width: 0%;
+      transition: width 0.15s ease;
+    }
+
+    /* ═══════════════════════════════════════════
+       TIMELINE SLIDER
+    ═══════════════════════════════════════════ */
+    .tl-slider {
+      position: fixed;
+      top: 48px;
+      left: 0; right: 0;
+      z-index: 150;
+      padding: 0 40px 0;
+      background: linear-gradient(to bottom, rgba(10,15,24,0.98) 60%, transparent);
+    }
+
+    .tl-slider-inner {
+      position: relative;
+      height: 62px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .tl-segs {
+      display: flex;
+      width: 100%;
+      gap: 2px;
+      position: relative;
+      align-items: flex-end;
+    }
+
+    .tl-seg {
+      flex: 1;
+      cursor: pointer;
+      position: relative;
+      padding-bottom: 18px;
+      transition: all 0.2s;
+    }
+
+    .tl-seg-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: var(--seg-col);
+      opacity: 0.25;
+      transition: height 0.25s ease, opacity 0.25s ease;
+    }
+
+    .tl-seg:hover .tl-seg-bar { opacity: 0.55; height: 4px; }
+    .tl-seg.active .tl-seg-bar { opacity: 1; height: 6px; }
+
+    .tl-seg-year {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: rgba(245,237,216,0.3);
+      white-space: nowrap;
+      transform: translateX(-50%);
+      transition: color 0.25s;
+      pointer-events: none;
+    }
+
+    .tl-seg:first-child .tl-seg-year { transform: translateX(0); }
+    .tl-seg.active .tl-seg-year { color: rgba(245,237,216,0.75); }
+
+    .tl-seg-tip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      background: rgba(10,15,24,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--cream);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
+
+    .tl-seg:hover .tl-seg-tip { opacity: 1; }
+
+    .tl-today {
+      position: absolute;
+      bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      transform: translateX(-50%);
+      z-index: 20;
+    }
+
+    .tl-today-flag {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.9);
+      white-space: nowrap;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 3px;
+      padding: 2px 6px;
+      margin-bottom: 4px;
+    }
+
+    .tl-today-line {
+      width: 1px;
+      height: 20px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+    }
+
+    .tl-slider-rule {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(200,168,75,0.15) 20%, rgba(200,168,75,0.15) 80%, transparent);
+      margin-top: 8px;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL TRACK
+    ═══════════════════════════════════════════ */
+    .tl-scroll {
+      display: flex;
+      height: 100vh;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .tl-scroll::-webkit-scrollbar { display: none; }
+
+    /* ═══════════════════════════════════════════
+       ERA PANELS
+    ═══════════════════════════════════════════ */
+    .era {
+      min-width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .era-bg {
+      position: absolute;
+      inset: 0;
+    }
+
+    .era-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .era-1 .era-bg { background: radial-gradient(ellipse at 28% 60%, #0D2A1A 0%, #071A10 45%, #030D08 100%); }
+    .era-2 .era-bg { background: radial-gradient(ellipse at 65% 40%, #0A1E35 0%, #061428 45%, #030A14 100%); }
+    .era-3 .era-bg { background: radial-gradient(ellipse at 38% 55%, #2A1E08 0%, #1A1305 45%, #0D0A02 100%); }
+    .era-4 .era-bg { background: radial-gradient(ellipse at 50% 50%, #181C22 0%, #0F1218 45%, #070A0E 100%); }
+    .era-5 .era-bg { background: radial-gradient(ellipse at 58% 40%, #110F30 0%, #0B0A20 45%, #060510 100%); }
+    .era-6 .era-bg { background: radial-gradient(ellipse at 32% 62%, #082A1E 0%, #051A14 45%, #030D09 100%); }
+    .era-7 .era-bg { background: radial-gradient(ellipse at 55% 42%, #062535 0%, #041828 45%, #020C14 100%); }
+    .era-8 .era-bg { background: radial-gradient(ellipse at 45% 32%, #0A2015 0%, #061510 50%, #030A08 100%); }
+
+    .era-num {
+      position: absolute;
+      right: 4%;
+      bottom: 10%;
+      font-family: 'Playfair Display', serif;
+      font-size: min(22vw, 240px);
+      font-weight: 700;
+      color: var(--accent, var(--gold));
+      opacity: 0.04;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Waka / route SVG silhouette */
+    .era-deco {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 48%;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       CONTENT
+    ═══════════════════════════════════════════ */
+    .era-content {
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      width: 90%;
+      margin: 0 auto;
+      padding: 140px 0 70px;
+    }
+
+    .tl-anim {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .era.in-view .tl-anim { opacity: 1; transform: translateY(0); }
+
+    .tl-anim-d1 { transition-delay: 0.1s; }
+    .tl-anim-d2 { transition-delay: 0.22s; }
+    .tl-anim-d3 { transition-delay: 0.34s; }
+    .tl-anim-d4 { transition-delay: 0.44s; }
+    .tl-anim-d5 { transition-delay: 0.54s; }
+    .tl-anim-d6 { transition-delay: 0.64s; }
+    .tl-anim-d7 { transition-delay: 0.74s; }
+    .tl-anim-d8 { transition-delay: 0.84s; }
+
+    .era-maori {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(34px, 5.2vw, 70px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--accent, var(--gold));
+      margin-bottom: 4px;
+    }
+
+    .era-year {
+      font-size: 0.65em;
+      font-weight: 400;
+      opacity: 0.55;
+      letter-spacing: 0.02em;
+    }
+
+    .era-english {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(13px, 1.6vw, 18px);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: rgba(245,237,216,0.5);
+      margin-bottom: 28px;
+    }
+
+    .era-rule {
+      width: 48px;
+      height: 1.5px;
+      background: var(--accent, var(--gold));
+      margin-bottom: 28px;
+      transform-origin: left;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: opacity 0.5s ease, transform 0.6s ease;
+    }
+
+    .era.in-view .era-rule { opacity: 1; transform: scaleX(1); }
+
+    .era-events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px 20px;
+      margin-bottom: 28px;
+    }
+
+    .ev {
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+    }
+
+    .ev-icon { font-size: 18px; margin-bottom: 7px; }
+
+    .ev-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.35;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+
+    .ev-desc {
+      font-size: 11.5px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(245,237,216,0.6);
+    }
+
+    .era-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      padding: 3px 11px;
+      border-radius: 100px;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent, var(--gold));
+      color: var(--accent, var(--gold));
+      background: rgba(0,0,0,0.15);
+    }
+
+    /* ═══════════════════════════════════════════
+       ERA ACCENT COLOURS
+    ═══════════════════════════════════════════ */
+    .era-1 { --accent: #5CB85C; }   /* waka green */
+    .era-2 { --accent: #5BC8D4; }   /* ocean teal */
+    .era-3 { --accent: #D4A827; }   /* iron gold */
+    .era-4 { --accent: #94A3B8; }   /* asphalt grey */
+    .era-5 { --accent: #818CF8; }   /* digital indigo */
+    .era-6 { --accent: #10B981; }   /* electric green */
+    .era-7 { --accent: #00CFFF; }   /* electric cyan */
+    .era-8 { --accent: #A3E635; }   /* future lime */
+
+    /* ═══════════════════════════════════════════
+       FUTURE PATHS (Era 8)
+    ═══════════════════════════════════════════ */
+    .future-intro {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(245,237,216,0.65);
+      max-width: 520px;
+      margin-bottom: 22px;
+    }
+
+    .future-paths {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .path {
+      border-radius: 7px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.09);
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .path:hover { background: rgba(255,255,255,0.03); }
+
+    .path-a { border-color: rgba(0,207,255,0.3); }
+    .path-b { border-color: rgba(16,185,129,0.3); }
+    .path-c { border-color: rgba(200,168,75,0.3); }
+    .path-d { border-color: rgba(100,100,110,0.25); }
+
+    .path-a:hover { border-color: rgba(0,207,255,0.6); }
+    .path-b:hover { border-color: rgba(16,185,129,0.6); }
+    .path-c:hover { border-color: rgba(200,168,75,0.6); }
+    .path-d:hover { border-color: rgba(100,100,110,0.5); }
+
+    .path-condition {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .path-a .path-condition { color: #00CFFF; }
+    .path-b .path-condition { color: #10B981; }
+    .path-c .path-condition { color: #C8A84B; }
+    .path-d .path-condition { color: #8B9BAA; }
+
+    .path-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .path-desc {
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(245,237,216,0.55);
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .tl-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 14px 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to top, rgba(10,15,24,0.96) 55%, transparent);
+    }
+
+    .tl-hint {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(245,237,216,0.3);
+    }
+
+    .tl-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tl-counter {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: rgba(245,237,216,0.4);
+      min-width: 42px;
+      text-align: center;
+    }
+
+    .tl-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.3);
+      background: rgba(200,168,75,0.04);
+      color: rgba(200,168,75,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .tl-btn:hover {
+      border-color: rgba(200,168,75,0.7);
+      background: rgba(200,168,75,0.1);
+      color: #C8A84B;
+    }
+
+    .tl-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .tl-header { padding: 12px 20px 10px; }
+      .tl-slider { top: 44px; padding: 0 20px; }
+      .tl-footer { padding: 10px 20px 16px; }
+      .era-content { padding: 130px 0 60px; }
+    }
+
+    @media (max-width: 640px) {
+      .tl-brand { display: none; }
+      .tl-seg-tip { display: none; }
+      .era-events { grid-template-columns: 1fr 1fr; }
+      .future-paths { grid-template-columns: 1fr; }
+      .tl-hint { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .era-events { grid-template-columns: 1fr; }
+      .tl-seg-year { font-size: 7px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="tl-progress"><div class="tl-progress-fill" id="progressFill"></div></div>
+
+<header class="tl-header">
+  <div class="tl-brand">Craffft · Transport</div>
+  <div class="tl-era-title" id="tlEraTitle"></div>
+</header>
+
+<div class="tl-slider" id="tlSlider">
+  <div class="tl-slider-inner">
+    <div class="tl-segs" id="tlSegs"></div>
+  </div>
+  <div class="tl-slider-rule"></div>
+</div>
+
+<div class="tl-scroll" id="tlScroll">
+
+  <!-- ━━━━ ERA 1: TE ARA O NGĀ TĪPUNA ━━━━ -->
+  <section class="era era-1" data-era="0">
+    <div class="era-bg"></div>
+    <div class="era-num">1</div>
+
+    <!-- Waka silhouette SVG -->
+    <svg class="era-deco" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 200 C80 160 160 140 200 140 C240 140 320 160 380 200" stroke="white" stroke-width="3" fill="none"/>
+      <path d="M40 200 C40 200 60 185 200 185 C340 185 360 200 360 200" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M200 140 L200 60" stroke="white" stroke-width="2"/>
+      <path d="M200 60 L160 130" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M200 60 L240 130" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M60 195 C60 195 100 210 200 210 C300 210 340 195 340 195" stroke="white" stroke-width="1" fill="none"/>
+      <ellipse cx="60" cy="200" rx="15" ry="6" stroke="white" stroke-width="1" fill="none"/>
+      <ellipse cx="340" cy="200" rx="15" ry="6" stroke="white" stroke-width="1" fill="none"/>
+    </svg>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Ancestral Pathways <span class="era-year">(c.1350)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Te Ara o Ngā Tīpuna</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🛶</div>
+          <div class="ev-title">Waka Navigation</div>
+          <div class="ev-desc">Polynesian ancestors traverse the Pacific using waka hourua — double-hulled ocean voyaging canoes guided by stars, currents, and wind. The most sophisticated open-ocean navigation system in the pre-modern world.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🌊</div>
+          <div class="ev-title">Inter-Iwi Trade Routes</div>
+          <div class="ev-desc">Coastal waka establish trade routes between iwi across both islands. Greenstone (pounamu) from the South Island, obsidian from Tuhua, and kūmara from the north travel extensive networks — no wheels, no roads, only water.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🌙</div>
+          <div class="ev-title">Maramataka & Safe Passage</div>
+          <div class="ev-desc">The lunar calendar governs departure timing for ocean voyages. Seasonal winds, tidal patterns, and star positions are encoded in oral knowledge — a navigation science refined over a thousand years of Pacific voyaging.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🐾</div>
+          <div class="ev-title">Overland Tracks</div>
+          <div class="ev-desc">A network of foot tracks connects inland settlements, following ridge lines and river valleys. These ancestral pathways — many still traceable today — become the template for colonial roads and modern highways.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Waka Hourua</span>
+        <span class="tag">Coastal Trade</span>
+        <span class="tag">Star Navigation</span>
+        <span class="tag">Pounamu Routes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 2: NGĀ KAIPUKE ━━━━ -->
+  <section class="era era-2" data-era="1">
+    <div class="era-bg"></div>
+    <div class="era-num">2</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Age of Ships <span class="era-year">(1840)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Ngā Kaipuke</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">⚓</div>
+          <div class="ev-title">Coastal Shipping Lifeblood</div>
+          <div class="ev-desc">With no roads and dense bush, coastal shipping is the only viable freight network for the young colony. Dozens of small steamers connect isolated settlements — the sea is the highway.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🚢</div>
+          <div class="ev-title">Union Steamship Company</div>
+          <div class="ev-desc">The Union Steamship Company dominates coastal trade, building a near-monopoly over inter-island and coastal freight. Its vessels are the arteries of the colonial economy — carrying wool, timber, grain, and people.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">✈️</div>
+          <div class="ev-title">TEAL Flying Boats</div>
+          <div class="ev-desc">Tasman Empire Airways Limited (TEAL) launches flying boat services across the Tasman, connecting New Zealand to Australia and beyond. NZ aviation pioneers — including Richard Pearse — establish a proud tradition of aerial innovation.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🔧</div>
+          <div class="ev-title">Cook Strait Challenge</div>
+          <div class="ev-desc">The Cook Strait — 22km of volatile, wind-raked water — defines New Zealand's greatest logistics challenge. Every ton of freight between the islands must cross it. The quest to tame this crossing shapes transport policy for 180 years.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Coastal Steamers</span>
+        <span class="tag">Union Company</span>
+        <span class="tag">TEAL Flying Boats</span>
+        <span class="tag">Cook Strait</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 3: NGĀ ARA RINO ━━━━ -->
+  <section class="era era-3" data-era="2">
+    <div class="era-bg"></div>
+    <div class="era-num">3</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Iron Roads <span class="era-year">(1870)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Ngā Ara Rino</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🚂</div>
+          <div class="ev-title">Vogel's Public Works Era</div>
+          <div class="ev-desc">Premier Julius Vogel borrows massively overseas to fund a national rail network — the most ambitious infrastructure programme in colonial NZ history. Railways reach regions previously accessible only by foot or sea.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🏔️</div>
+          <div class="ev-title">Engineering the Impossible</div>
+          <div class="ev-desc">Tunnels through the Remutakas, viaducts across alpine gorges, spiral loops on the Raurimu — NZ railway engineers tackle terrain that would defeat most nations. The Rimutaka Incline operates at gradients of 1 in 15.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🌐</div>
+          <div class="ev-title">National Connectivity</div>
+          <div class="ev-desc">Rail transforms the movement of wool, grain, and timber from remote pastoral stations to coastal ports. Settlers pour into regions previously isolated — the railway is the engine of colonial expansion and economic integration.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">✈️</div>
+          <div class="ev-title">Post-WWII Aviation Grows</div>
+          <div class="ev-desc">National Airways Corporation (NAC) dramatically expands regional air connectivity in the post-war era. Air links supplement rail in reaching isolated communities — laying the foundation for modern domestic aviation.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">KiwiRail Origins</span>
+        <span class="tag">Vogel Programme</span>
+        <span class="tag">Alpine Engineering</span>
+        <span class="tag">NAC Aviation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 4: TE AO RORI ━━━━ -->
+  <section class="era era-4" data-era="3">
+    <div class="era-bg"></div>
+    <div class="era-num">4</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Road Era <span class="era-year">(1922)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Te Ao Rori</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">🛣️</div>
+          <div class="ev-title">Main Highways Act 1922</div>
+          <div class="ev-desc">Parliament commits to subsidising a national road network. By 1925, New Zealand has over 90,000km of roads and tracks. The internal combustion engine begins its systematic defeat of rail and coastal shipping.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🚛</div>
+          <div class="ev-title">Trucks Beat Rail</div>
+          <div class="ev-desc">The inherent flexibility of heavy trucks — point-to-point, no fixed schedule, door-to-door — fundamentally outcompetes rail for general freight. The National Roads Board (1954) locks in a paradigm of highway investment that persists today.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">📊</div>
+          <div class="ev-title">93% Road Dependency</div>
+          <div class="ev-desc">By the late 20th century, roads carry approximately 93% of New Zealand's total freight tonnage. Rail and coastal shipping are relegated to niche heavy-bulk roles. A critical structural fragility is quietly being built.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">✈️</div>
+          <div class="ev-title">Air New Zealand Born</div>
+          <div class="ev-desc">Air New Zealand emerges from the merger of NAC and TEAL, becoming the national carrier. Jet aviation shrinks the island nation — Christchurch to Auckland in under an hour. Domestic air freight begins its rise.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">State Highways</span>
+        <span class="tag">Heavy Road Freight</span>
+        <span class="tag">Air New Zealand</span>
+        <span class="tag">Road Dominance</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 5: TE AO MATIHIKO ━━━━ -->
+  <section class="era era-5" data-era="4">
+    <div class="era-bg"></div>
+    <div class="era-num">5</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Digital Era <span class="era-year">(1990)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Te Ao Matihiko</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">📡</div>
+          <div class="ev-title">GPS Enters Logistics</div>
+          <div class="ev-desc">GPS, telematics, and early route-planning software transform fleet management. NZTA Waka Kotahi is established (1989) as the operational arm of the growing state highway network — carrying a $32.9B investment mandate by the 2020s.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">📦</div>
+          <div class="ev-title">Containerisation & Kotahi</div>
+          <div class="ev-desc">Containerisation transforms port operations. Kotahi — a joint venture managing massive volumes of NZ's export cargo — deploys Azure Databricks to process event data lakes, giving near real-time visibility on chilled meat and dairy exports.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">💻</div>
+          <div class="ev-title">Freight Tech Startups</div>
+          <div class="ev-desc">MyTrucking (Sam & Sara Orsborn) launches cloud-based TMS software for rural and livestock carriers — eliminating paper double-entry and integrating with Xero. Self-funded, it expands to Australia and the UK without venture capital.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">⚠️</div>
+          <div class="ev-title">Vulnerability Exposed</div>
+          <div class="ev-desc">As digitisation accelerates, academic voices like Prof. Tava Olsen (Uni of Auckland) warn that 93% road dependency is a structural risk — one extreme weather event away from severing entire regions. The warning goes largely unheeded.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">GPS Telematics</span>
+        <span class="tag">MyTrucking</span>
+        <span class="tag">Kotahi / Databricks</span>
+        <span class="tag">NZTA Waka Kotahi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 6: ARA HOU ━━━━ -->
+  <section class="era era-6" data-era="5">
+    <div class="era-bg"></div>
+    <div class="era-num">6</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">Green Infrastructure <span class="era-year">(2019)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Ara Hou</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">⚡</div>
+          <div class="ev-title">Ika Rere — First Electric Ferry</div>
+          <div class="ev-desc">Wellington's Ika Rere becomes the Southern Hemisphere's first fully electric, high-performance carbon-fibre passenger ferry — built by WEBBCo using 3D digital modelling and composite lightweighting. It crosses Wellington Harbour at 20 knots on zero emissions.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🌀</div>
+          <div class="ev-title">Cyclone Gabrielle</div>
+          <div class="ev-desc">February 2023: Cyclone Gabrielle inflicts $14.5B in damage — destroying bridges, severing rail lines, and cutting entire regions from the supply chain. Napier to Wairoa blows out from 90 minutes to 6+ hours. The road dependency disaster is no longer theoretical.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">🚗</div>
+          <div class="ev-title">EV Uptake & RUC Reform</div>
+          <div class="ev-desc">Government EV subsidies accelerate light vehicle electrification. April 2024: Road User Charges extended to EVs ($76/1,000km) once fleet hits 2% threshold — signaling the shift from EV adoption incentive to fiscal equity in road maintenance funding.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">🤖</div>
+          <div class="ev-title">Warehouse Robotics</div>
+          <div class="ev-desc">XY Logistics deploys Autonomous Guided Vehicles (AGVs) and Autonomous Mobile Robots (AMRs) in NZ warehouses. Delivr launches fully paperless 3PL operations for e-commerce brands — real-time tracking and automated dispatch routing at scale.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">Ika Rere</span>
+        <span class="tag">Cyclone Gabrielle</span>
+        <span class="tag">EV Fleet</span>
+        <span class="tag">Warehouse Robotics</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 7: TE AO HIKO ━━━━ -->
+  <section class="era era-7" data-era="6">
+    <div class="era-bg"></div>
+    <div class="era-num">7</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Electric Age <span class="era-year">(2025)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Te Ao Hiko</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <div class="era-events">
+        <div class="ev tl-anim tl-anim-d4">
+          <div class="ev-icon">✈️</div>
+          <div class="ev-title">BETA Alia Electric Aircraft</div>
+          <div class="ev-desc">Air NZ's Mission Next Gen programme deploys the BETA Alia CX300 — a 427kW battery-electric aircraft. Operating cost: US$18/hr vs US$347/hr for a Cessna Caravan. Zero-emission cargo flights cross the Cook Strait between Wellington and Blenheim in trials from 2025.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d5">
+          <div class="ev-icon">🔌</div>
+          <div class="ev-title">3.3MW Marine Charging</div>
+          <div class="ev-desc">Auckland Transport deploys a Megawatt Charging System (MCS) delivering up to 3.3MW per ferry berth — transforming 11–22kV utility power through liquid-cooled units into glycol-cooled cables on floating pontoons. A global first for commercial marine electrification.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d6">
+          <div class="ev-icon">⛴️</div>
+          <div class="ev-title">iReX Cancellation — $800M Crisis</div>
+          <div class="ev-desc">The government cancels the iReX rail-enabled Cook Strait ferries programme, crystallising a $700M–$1B loss. KiwiRail is left without replacement vessels. Each ferry cancellation costs tourism an estimated $21k. The South Island's supply chain resilience is dangerously exposed.</div>
+        </div>
+        <div class="ev tl-anim tl-anim-d7">
+          <div class="ev-icon">👷</div>
+          <div class="ev-title">The Retirement Cliff</div>
+          <div class="ev-desc">37% of transport operators report chronic driver shortages. 20% of drivers will retire within 5 years. Over 25% of the rail workforce departs within 10 years. NZ has no university qualification in rail engineering. A demographic crisis is accelerating into a capability emergency.</div>
+        </div>
+      </div>
+
+      <div class="era-tags tl-anim tl-anim-d8">
+        <span class="tag">BETA Alia CX300</span>
+        <span class="tag">Megawatt Charging</span>
+        <span class="tag">iReX Cancellation</span>
+        <span class="tag">Retirement Cliff</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━ ERA 8: NGĀ ARA ━━━━ -->
+  <section class="era era-8" data-era="7">
+    <div class="era-bg"></div>
+    <div class="era-num">8</div>
+
+    <div class="era-content">
+      <h2 class="era-maori tl-anim tl-anim-d2">The Pathways <span class="era-year">(2026 →)</span></h2>
+      <p class="era-english tl-anim tl-anim-d3">Ngā Ara</p>
+      <div class="era-rule tl-anim-d3"></div>
+
+      <p class="future-intro tl-anim tl-anim-d4">
+        New Zealand's $18.5B transport sector is at its most consequential fork since the 1922 Main Highways Act.
+        The decisions made today will determine whether this island nation moves — or stalls.
+      </p>
+
+      <div class="future-paths">
+        <div class="path path-a tl-anim tl-anim-d5">
+          <div class="path-condition">If We Electrify</div>
+          <div class="path-name">Zero-Emission Freight by 2040</div>
+          <div class="path-desc">Electric aviation scales the Cook Strait crossing. The 3.3MW marine charging network rolls out nationally. Heavy EV trucks replace diesel fleets. NZ becomes a real-world testbed for global zero-emission logistics — and exports the playbook.</div>
+        </div>
+        <div class="path path-b tl-anim tl-anim-d6">
+          <div class="path-condition">If We Diversify</div>
+          <div class="path-name">Multimodal Resilience</div>
+          <div class="path-desc">Rail and coastal shipping are reinvested as genuine freight redundancies alongside roads. The next Cyclone Gabrielle doesn't sever regions for months. Cook Strait has reliable rail-enabled ferries. The 93% road dependency is finally broken.</div>
+        </div>
+        <div class="path path-c tl-anim tl-anim-d7">
+          <div class="path-condition">If We Build Workforce</div>
+          <div class="path-name">Closing the Retirement Cliff</div>
+          <div class="path-desc">A dedicated NZ rail engineering qualification is established. "Te Ara ki Tua" driver programmes scale. DEI initiatives bring Māori and women into heavy transport. The retiring cohort's institutional knowledge is captured before it walks out the door.</div>
+        </div>
+        <div class="path path-d tl-anim tl-anim-d8">
+          <div class="path-condition">Risk: If We Stall</div>
+          <div class="path-name">Infrastructure Paralysis</div>
+          <div class="path-desc">Without ferry replacement, the South Island's freight viability erodes. Without workforce investment, the driver shortage cascades into supply chain failure. Without modal diversification, the next climate event costs not $14.5B — but more. The window to act is narrow.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .tl-scroll -->
+
+<footer class="tl-footer">
+  <span class="tl-hint">← → Arrow keys · Scroll · Swipe</span>
+  <div class="tl-controls">
+    <button class="tl-btn" id="btnPrev" aria-label="Previous era">←</button>
+    <span class="tl-counter" id="eraCounter">1 / 8</span>
+    <button class="tl-btn" id="btnNext" aria-label="Next era">→</button>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const ERAS = [
+      { year: 'c.1350', label: 'The Ancestral Pathways',  color: '#5CB85C' },
+      { year: '1840',   label: 'The Age of Ships',         color: '#5BC8D4' },
+      { year: '1870',   label: 'The Iron Roads',           color: '#D4A827' },
+      { year: '1922',   label: 'The Road Era',             color: '#94A3B8' },
+      { year: '1990',   label: 'The Digital Era',          color: '#818CF8' },
+      { year: '2019',   label: 'Green Infrastructure',     color: '#10B981' },
+      { year: '2025',   label: 'The Electric Age',         color: '#00CFFF' },
+      { year: '2026 →', label: 'The Pathways',             color: '#A3E635' },
+    ];
+
+    const TODAY_ERA_IDX = 7;
+    const DEFAULT_ERA   = 6;
+
+    const scroll   = document.getElementById('tlScroll');
+    const segsEl   = document.getElementById('tlSegs');
+    const sliderEl = document.getElementById('tlSlider');
+    const fill     = document.getElementById('progressFill');
+    const counter  = document.getElementById('eraCounter');
+    const eraTitle = document.getElementById('tlEraTitle');
+    const btnPrev  = document.getElementById('btnPrev');
+    const btnNext  = document.getElementById('btnNext');
+    const panels   = Array.from(document.querySelectorAll('.era'));
+    const N        = panels.length;
+    let current    = DEFAULT_ERA;
+
+    // ── Build slider segments ──────────────────────────────
+    ERAS.forEach((e, i) => {
+      const seg = document.createElement('div');
+      seg.className = 'tl-seg' + (i === DEFAULT_ERA ? ' active' : '');
+      seg.style.setProperty('--seg-col', e.color);
+      seg.setAttribute('aria-label', `Go to era: ${e.label}`);
+      seg.innerHTML = `
+        <div class="tl-seg-tip">${e.label}</div>
+        <div class="tl-seg-bar"></div>
+        <div class="tl-seg-year">${e.year}</div>`;
+      seg.addEventListener('click', () => scrollToEra(i));
+      segsEl.appendChild(seg);
+    });
+
+    const segEls = Array.from(segsEl.querySelectorAll('.tl-seg'));
+
+    // ── Place TODAY marker ─────────────────────────────────
+    function placeTodayMarker() {
+      const existing = sliderEl.querySelector('.tl-today');
+      if (existing) existing.remove();
+      const inner  = sliderEl.querySelector('.tl-slider-inner');
+      const segW   = segsEl.offsetWidth / N;
+      const leftPx = TODAY_ERA_IDX * segW;
+      const marker = document.createElement('div');
+      marker.className = 'tl-today';
+      marker.style.left = leftPx + 'px';
+      marker.innerHTML = `<div class="tl-today-flag">TODAY</div><div class="tl-today-line"></div>`;
+      inner.appendChild(marker);
+    }
+
+    // ── Intersection Observer ──────────────────────────────
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => e.target.classList.toggle('in-view', e.isIntersecting));
+    }, { threshold: 0.45 });
+
+    panels.forEach(p => io.observe(p));
+
+    // ── Scroll tracking ────────────────────────────────────
+    function onScroll() {
+      const scrollLeft = scroll.scrollLeft;
+      const maxScroll  = scroll.scrollWidth - scroll.clientWidth;
+      fill.style.width = (maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0) + '%';
+      const clamped = Math.max(0, Math.min(N - 1, Math.round(scrollLeft / scroll.clientWidth)));
+      if (clamped !== current) { current = clamped; updateUI(); }
+    }
+
+    scroll.addEventListener('scroll', onScroll, { passive: true });
+
+    function updateUI() {
+      segEls.forEach((s, i) => s.classList.toggle('active', i === current));
+      counter.textContent  = `${current + 1} / ${N}`;
+      eraTitle.textContent = ERAS[current].label;
+      btnPrev.disabled     = current === 0;
+      btnNext.disabled     = current === N - 1;
+    }
+
+    function scrollToEra(idx) {
+      scroll.scrollTo({ left: Math.max(0, Math.min(N - 1, idx)) * scroll.clientWidth, behavior: 'smooth' });
+    }
+
+    btnPrev.addEventListener('click', () => scrollToEra(current - 1));
+    btnNext.addEventListener('click', () => scrollToEra(current + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); scrollToEra(current + 1); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); scrollToEra(current - 1); }
+      if (e.key === 'Home') { e.preventDefault(); scrollToEra(0); }
+      if (e.key === 'End')  { e.preventDefault(); scrollToEra(N - 1); }
+    });
+
+    window.addEventListener('resize', placeTodayMarker);
+
+    updateUI();
+    scroll.scrollLeft = DEFAULT_ERA * scroll.clientWidth;
+    requestAnimationFrame(() => {
+      placeTodayMarker();
+      panels[DEFAULT_ERA].classList.add('in-view');
+    });
+  })();
+</script>
+</body>
+</html>
